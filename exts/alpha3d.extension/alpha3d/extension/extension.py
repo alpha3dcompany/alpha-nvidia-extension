@@ -1,6 +1,6 @@
 import omni.ext
 import omni.ui as ui
-from login import Login
+from .login import Login
 
 
 # Functions and vars are available to other extension as usual in python: `example.python_ext.some_public_function(x)`
@@ -41,8 +41,8 @@ class Alpha3dExtensionExtension(omni.ext.IExt):
         return self.access_token is not None
 
     def login_button_clicked(self):
-        username = self.email_input.value
-        password = self.password_input.value
+        username = self.email_input.model.get_value_as_string()
+        password = self.password_input.model.get_value_as_string()
 
         login = Login(username, password)
 
@@ -65,7 +65,7 @@ class Alpha3dExtensionExtension(omni.ext.IExt):
                 self.password_input = ui.StringField(password_mode=True, height=20, style={"margin_width": 40})
 
                 ui.Button("Log In", height=80, style={"margin_width": 100, "margin_height": 20},
-                          clicked_fn=self.login_button_clicked())
+                          clicked_fn=self.login_button_clicked)
 
         else:
             with ui.VStack():
