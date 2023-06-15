@@ -9,7 +9,7 @@ class Login:
     def sign_in(self):
         token = None
 
-        url = 'https://app.alpha3d.io/alphaar/auth/oauth/token?grant_type=password'
+        url = 'http://localhost:9001/alphaar/auth/oauth/token?grant_type=password'
         headers = {'Content-Type': 'application/x-www-form-urlencoded', 'Authorization': 'Basic c2VsZi1zZXJ2aWNlOg=='}
 
         data = {
@@ -20,6 +20,7 @@ class Login:
         try:
             response = requests.request('POST', url, headers=headers, data=data)
             if response.status_code == 200:
+                print(response.json())
                 token = response.json().get('access_token')
                 if token:
                     print("Successfully logged in! Token: " + token)
