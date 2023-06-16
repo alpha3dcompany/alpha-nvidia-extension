@@ -17,7 +17,7 @@ class Alpha3dExtensionExtension(omni.ext.IExt):
     # this extension is located on filesystem.
     def __init__(self):
         self.email_input = None
-        self.password_input = None
+        self.password_input = Nonea
         self.access_token = None
 
     def on_startup(self, ext_id):
@@ -48,6 +48,10 @@ class Alpha3dExtensionExtension(omni.ext.IExt):
 
         self.access_token = login.sign_in()
         self.show_content()
+
+        if self.is_logged():
+            self._window.frame.remove_all_widgets()
+            self.show_content()
 
     def show_content(self):
         if not self.is_logged():
