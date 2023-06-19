@@ -1,8 +1,8 @@
 from login import Login
 from product_service import ProductService
 
-username = ""
-password = ""
+username = "ilayda+admin@alpha3d.io"
+password = "E4yR7Gz4q!"
 
 # Login
 login = Login(username, password)

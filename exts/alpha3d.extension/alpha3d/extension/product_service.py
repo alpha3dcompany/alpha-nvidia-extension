@@ -24,10 +24,10 @@ class ProductService:
             print(f"{response.status_code}: {response.content}")
 
     def browse_assets(self):
-        return self.do_request("http://localhost:8080/alphaar/api/ext/product/approved")
+        return self.do_request("https://app.alpha3d.io/alphaar/api/ext/product/approved")
 
     def retrieve_asset_files(self, product_uuid):
-        return self.do_request("http://localhost:8080/alphaar/api/ext/asset/" + product_uuid)
+        return self.do_request("https://app.alpha3d.io/alphaar/api/ext/asset/" + product_uuid)
 
 
 

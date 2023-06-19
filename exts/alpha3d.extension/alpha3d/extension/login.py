@@ -9,7 +9,7 @@ class Login:
     def sign_in(self):
         token = None
 
-        url = 'http://localhost:9001/alphaar/auth/oauth/token?grant_type=password'
+        url = 'https://app.alpha3d.io/alphaar/auth/oauth/token?grant_type=password'
         headers = {'Content-Type': 'application/x-www-form-urlencoded', 'Authorization': 'Basic c2VsZi1zZXJ2aWNlOg=='}
 
         data = {
