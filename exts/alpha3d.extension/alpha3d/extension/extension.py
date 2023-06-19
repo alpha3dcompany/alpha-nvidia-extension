@@ -1,6 +1,4 @@
-import base64
-import os
-import uuid
+import base64, os, uuid, shutil
 from io import BytesIO
 
 import omni.ext
@@ -27,6 +25,7 @@ class Alpha3dExtensionExtension(omni.ext.IExt):
         self.email_input = None
         self.password_input = None
         self.access_token = None
+        self.mocked = False
         self.assets = []
 
     def on_startup(self, ext_id):
@@ -52,8 +51,8 @@ class Alpha3dExtensionExtension(omni.ext.IExt):
     @staticmethod
     def remove_temp_dir():
         temp_dir = os.path.join(os.getcwd(), r'temp')
-        if not os.path.exists(temp_dir):
-            os.removedirs(temp_dir)
+        if os.path.exists(temp_dir):
+            shutil.rmtree(temp_dir)
 
     def on_shutdown(self):
         self.remove_temp_dir()
@@ -75,14 +74,14 @@ class Alpha3dExtensionExtension(omni.ext.IExt):
         username = self.email_input.model.get_value_as_string()
         password = self.password_input.model.get_value_as_string()
 
-        login = Login(username, password, mocked=True)
+        login = Login(username, password, mocked=self.mocked)
 
-        self.access_token = login.sign_in()
+        #self.access_token = login.sign_in()
+        self.access_token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJpbGF5ZGErYWRtaW5AYWxwaGEzZC5pbyIsInVzZXJfbmFtZSI6ImlsYXlkYSthZG1pbkBhbHBoYTNkLmlvIiwic2NvcGUiOlsiZXh0ZXJuYWwiLCJyZWFkIiwid3JpdGUiXSwicm9sZXMiOlsiUk9MRV9BRE1JTiJdLCJjb21wYW55IjoiQWxwaGEgQVIgT8OcIiwiZXhwIjoxNjg3MzU5NTM3LCJ1dWlkIjoiMWQwYjk0N2MtMWRjZS00MjVhLTg3ZTAtNzc5YjQ3MDhiMjkwIiwiYXV0aG9yaXRpZXMiOlsiUk9MRV9BRE1JTiJdLCJqdGkiOiJ2NlVyU2wzN3BaUWJMUjNkclp2ZGowdzI2TTAiLCJlbWFpbCI6ImlsYXlkYSthZG1pbkBhbHBoYTNkLmlvIiwiY2xpZW50X2lkIjoic2VsZi1zZXJ2aWNlIiwic3RhdHVzIjoiQUNUSVZFIn0.li8LBqwEWf6MJu-e4kCpxvxhjszwHhfJ9sa1OujjSfY"
 
         if self.is_logged():
-            product_service = ProductService(self.access_token, "USD", mocked=True)
+            product_service = ProductService(self.access_token, "USD", mocked=self.mocked)
             self.assets = product_service.browse_assets()
-
         self.show_content()
 
     def show_content(self):
@@ -124,9 +123,19 @@ class Alpha3dExtensionExtension(omni.ext.IExt):
                                 image_file = os.path.join(os.getcwd(), r'temp') + "/" + str(image_uuid) + ".png"
                                 model_file = os.path.join(os.getcwd(), r'temp') + "/" + str(image_uuid) + ".usd"
 
+
                                 self.base64_to_image(thumbnail, image_file)
+                
                                 if asset_files is not None and len(asset_files) > 0:
-                                    self.base64_to_image(asset_files[0]['base64'], model_file)
+
+
+                                    decoded_model_content = base64.b64decode(asset_files[0]['base64'])
+
+                                    with open(model_file, 'wb') as model_file_obj:
+                                        model_file_obj.write(decoded_model_content)
+ 
+
+                                    #self.base64_to_image(asset_files[0]['base64'], model_file)
 
                                 def drag(image_file, model_file):
                                     with ui.VStack():

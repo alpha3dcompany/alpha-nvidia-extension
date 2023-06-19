@@ -29,8 +29,9 @@ class ProductService:
             return  Mocked.mocked_assets()
         assets = self.do_request("https://app.alpha3d.io/alphaar/api/ext/product/approved")
         for index, asset in enumerate(assets):
-            uuid = asset['attachmentUuid']
-            assets[index]['assetFiles'] = self.retrieve_asset_files(uuid)
+            _uuid = asset['uuid']
+            assets[index]['assetFiles'] = self.retrieve_asset_files(_uuid)
+        return assets
 
     def retrieve_asset_files(self, product_uuid):
         if self.mocked:
