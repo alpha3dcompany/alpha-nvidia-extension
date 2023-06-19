@@ -1,7 +1,7 @@
-import base64, math
-import io
-import PIL
+import base64, os
+from io import BytesIO
 from PIL import Image
+import uuid
 import omni.ext
 import omni.ui as ui
 from .login import Login
@@ -28,7 +28,8 @@ class Alpha3dExtensionExtension(omni.ext.IExt):
 
     def on_startup(self, ext_id):
         print("[alpha3d.extension] alpha3d extension startup")
-
+        
+        self.create_temp_dir()
         self._count = 0
         self._show_login = False
         self._show_login_error = False
@@ -39,13 +40,30 @@ class Alpha3dExtensionExtension(omni.ext.IExt):
         self._window = ui.Window("Alpha3D", width=400, height=400)
         self.show_content()
 
+    def create_temp_dir(self):
+        temp_dir = os.path.join(os.getcwd(), r'temp')
+        if not os.path.exists(temp_dir):
+            os.makedirs(temp_dir)
+
+    def remove_temp_dir(self):
+        temp_dir = os.path.join(os.getcwd(), r'temp')
+        if not os.path.exists(temp_dir):
+            os.removedirs(temp_dir)
+
     def on_shutdown(self):
+        self.remove_temp_dir()
         print("[alpha3d.extension] alpha3d extension shutdown")
 
     def is_logged(self):
-        print(self.access_token)
-        print(self.access_token is not None)
         return self.access_token is not None
+    
+    def base64_to_image(self, thumbnail, image_file):
+    # Decode the base64 string to bytes
+        binary_data = base64.b64decode(thumbnail)
+
+        byte_stream = BytesIO(binary_data)
+        image = Image.open(byte_stream)
+        image.save(image_file)
 
     def login_button_clicked(self):
         #username = self.email_input.model.get_value_as_string()
@@ -98,35 +116,33 @@ class Alpha3dExtensionExtension(omni.ext.IExt):
                                 brand_name = asset["brandName"]
                                 model_name = asset["modelName"]
                                 thumbnail = asset["thumbnail"]
-                                image_provider = omni.ui.ByteImageProvider()
-                                thumbnail = "iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=="
-
-                                #res = "{0:08b}".format(int(base64.decodebytes(thumbnail.encode('utf-8')).hex(), 16))
-                           
-                                image_provider.set_bytes_data(list(base64.b64decode(thumbnail)), [100, 100])
+                                image_uuid = uuid.uuid4()
+                                import os
+                                image_file = os.path.join(os.getcwd(), r'temp') + "/" + str(image_uuid) + ".png"
+                                self.base64_to_image(thumbnail, image_file)
 
            
 
 
 
-                                def drag(url, image_proviver):
+                                def drag(image_file, model_url):
 
                                     with ui.VStack():
-                                        ui.ImageWithProvider(image_provider, width=100, height=100)
+                                        ui.Image(image_file, width=100, height=100)
                                         ui.Label(brand_name)
                                         ui.Label(model_name)
-                                    return url
+                                    return image_file
 
-                                def drag_area(image_provider, url):
-                                    image = ui.ImageWithProvider(image_provider, width=100, height=90,  style={"margin_width": 5})
+                                def drag_area(url, model_url):
+                                    image = ui.ImageWithProvider(image_file, width=100, height=90,  style={"margin_width": 5})
                                     _brand_name = ui.Label(brand_name, alignment=ui.Alignment.CENTER_TOP, height=10,
                                                       style={"font_size": 15})
                                     _model_name = ui.Label(model_name, alignment=ui.Alignment.CENTER_TOP, height=30,
                                                               style={"font_size": 15})
-                                    image.set_drag_fn(lambda: drag(url, image_provider))
+                                    image.set_drag_fn(lambda: drag(url, model_url))
 
                                 with ui.VStack():
                                     drag_area(
-                                        image_provider,
+                                        image_file,
                                         "http://omniverse-content-production.s3-us-west-2.amazonaws.com/Assets/Vegetation/Shrub/Acacia.usd")
 
