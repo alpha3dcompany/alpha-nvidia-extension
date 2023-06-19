@@ -1,8 +1,8 @@
 import requests
-
+from .mocked import Mocked
 
 class ProductService:
-    def __init__(self, bearer_token, file_format):
+    def __init__(self, bearer_token, file_format, mocked=False):
         self.bearer_token = bearer_token
         self.file_format = file_format
         self.params = {
@@ -12,6 +12,7 @@ class ProductService:
             'Content-Type': 'application/x-www-form-urlencoded',
             'Authorization': f'Bearer {self.bearer_token}'
         }
+        self.mocked = mocked
 
     def do_request(self, url):
         response = requests.get(url, headers=self.headers, params=self.params)
@@ -24,10 +25,19 @@ class ProductService:
             print(f"{response.status_code}: {response.content}")
 
     def browse_assets(self):
-        return self.do_request("https://app.alpha3d.io/alphaar/api/ext/product/approved")
+        if self.mocked:
+            return  Mocked.mocked_assets()
+        assets = self.do_request("https://app.alpha3d.io/alphaar/api/ext/product/approved")
+        for index, asset in enumerate(assets):
+            uuid = asset['attachmentUuid']
+            assets[index]['assetFiles'] = self.retrieve_asset_files(uuid)
 
     def retrieve_asset_files(self, product_uuid):
+        if self.mocked:
+            return Mocked.mocked_asset_files()
         return self.do_request("https://app.alpha3d.io/alphaar/api/ext/asset/" + product_uuid)
+
+
 
 
 
