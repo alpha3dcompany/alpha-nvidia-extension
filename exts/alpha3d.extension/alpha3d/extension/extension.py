@@ -141,8 +141,8 @@ class Alpha3dExtensionExtension(omni.ext.IExt):
 
                                 image_uuid = uuid.uuid4()
 
-                                image_file = os.path.join(os.getcwd(), r'temp') + "/" + str(image_uuid) + ".png"
-                                model_file = os.path.join(os.getcwd(), r'temp') + "/" + str(image_uuid) + ".usd"
+                                image_file = os.path.join(os.getcwd(), r'temp'), str(image_uuid) + ".png"
+                                model_file = os.path.join(os.getcwd(), r'temp'), str(image_uuid) + ".usd"
 
 
                                 self.base64_to_image(thumbnail, image_file)
