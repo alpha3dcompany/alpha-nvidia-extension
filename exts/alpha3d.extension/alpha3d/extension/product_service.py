@@ -1,5 +1,5 @@
 import requests
-from .mocked import Mocked
+from mocked import Mocked
 
 class ProductService:
     def __init__(self, bearer_token, file_format, mocked=False):

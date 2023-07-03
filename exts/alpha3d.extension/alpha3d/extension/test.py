@@ -1,5 +1,19 @@
+import base64
+import uuid
+from io import BytesIO
+from PIL import Image
+import os
 from login import Login
 from product_service import ProductService
+
+
+def base64_to_image(thumbnail, image_file):
+    # Decode the base64 string to bytes
+    binary_data = base64.b64decode(thumbnail)
+
+    byte_stream = BytesIO(binary_data)
+    image = Image.open(byte_stream)
+    image.save(image_file)
 
 username = "ilayda+admin@alpha3d.io"
 password = "E4yR7Gz4q!"
@@ -8,12 +22,19 @@ password = "E4yR7Gz4q!"
 login = Login(username, password)
 token = login.sign_in()
 
-file_format = "USD"
+file_format = "GLB"
 product_service = ProductService(token, file_format)
+
+image_uuid = uuid.uuid4()
 
 # Viewing asset browser
 asset_list = product_service.browse_assets()
+model_file = os.path.join(os.getcwd(),  str(image_uuid) + ".glb")
 
-for asset in asset_list:
-    # Retrieving asset file(s)
-    asset_files = product_service.retrieve_asset_files(asset['uuid'])
+decoded_model_content = base64.b64decode(asset_list[0]['assetFiles'][0]['base64'])
+
+with open(model_file, 'wb') as model_file_obj:
+    model_file_obj.write(decoded_model_content)
+
+# self.base64_to_image(asset_files[0]['base64'], model_file)
+print(asset_list)
