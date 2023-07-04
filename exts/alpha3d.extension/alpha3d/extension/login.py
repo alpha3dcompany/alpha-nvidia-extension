@@ -1,7 +1,10 @@
 import requests
-from mocked import Mocked
+from .mocked import Mocked
+
 
 SIGNIN_URL = 'https://app.alpha3d.io/alphaar/auth/oauth/token?grant_type=password'
+
+
 class Login:
     def __init__(self, username, password, mocked=False):
         self.username = username
