@@ -19,7 +19,6 @@ class ProductService:
         response = requests.get(url, headers=self.headers, params=self.params)
 
         if response.status_code == 200:
-            print("Request is proceed successfully!")
             return response.json()
         else:
             print("Request could not be proceed successfully!")
@@ -27,7 +26,7 @@ class ProductService:
 
     def browse_assets(self):
         if self.mocked:
-            return  Mocked.mocked_assets()
+            return Mocked.mocked_assets()
         assets = self.do_request("https://app.alpha3d.io/alphaar/api/ext/product/approved")
         for index, asset in enumerate(assets):
             _uuid = asset['uuid']

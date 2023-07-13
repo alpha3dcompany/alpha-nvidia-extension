@@ -27,7 +27,7 @@ class Login:
                 print(response.json())
                 token = response.json().get('access_token')
                 if token:
-                    print("Successfully logged in! Token: " + token)
+                    print("Successfully logged in!")
                 else:
                     print("An error occurred while logging in.")
             elif response.status_code == 401:
