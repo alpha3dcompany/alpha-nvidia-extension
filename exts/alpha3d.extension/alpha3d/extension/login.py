@@ -6,10 +6,10 @@ SIGNIN_URL = 'https://app.alpha3d.io/alphaar/auth/oauth/token?grant_type=passwor
 
 
 class Login:
-    def __init__(self, username, password, mocked=True):
+    def __init__(self, username, password, mocked=False):
         self.username = username
         self.password = password
-        self.mocked = True
+        self.mocked = mocked
 
     def sign_in(self):
         if self.mocked:

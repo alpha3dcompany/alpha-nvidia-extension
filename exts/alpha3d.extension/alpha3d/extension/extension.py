@@ -28,7 +28,7 @@ class Alpha3dExtensionExtension(omni.ext.IExt):
         self.email_input = None
         self.password_input = None
         self.access_token = None
-        self.mocked = True
+        self.mocked = False
         self.assets = []
 
     def on_startup(self, ext_id):

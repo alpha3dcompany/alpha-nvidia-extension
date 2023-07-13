@@ -13,7 +13,7 @@ class ProductService:
             'Content-Type': 'application/x-www-form-urlencoded',
             'Authorization': f'Bearer {self.bearer_token}'
         }
-        self.mocked = True
+        self.mocked = mocked
 
     def do_request(self, url):
         response = requests.get(url, headers=self.headers, params=self.params)
