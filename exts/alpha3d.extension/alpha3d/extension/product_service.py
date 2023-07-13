@@ -1,4 +1,4 @@
-import requests
+from pip_prebundle import requests
 from .mocked import Mocked
 
 
@@ -13,7 +13,7 @@ class ProductService:
             'Content-Type': 'application/x-www-form-urlencoded',
             'Authorization': f'Bearer {self.bearer_token}'
         }
-        self.mocked = mocked
+        self.mocked = True
 
     def do_request(self, url):
         response = requests.get(url, headers=self.headers, params=self.params)
@@ -38,8 +38,3 @@ class ProductService:
         if self.mocked:
             return Mocked.mocked_asset_files()
         return self.do_request("https://app.alpha3d.io/alphaar/api/ext/asset/" + product_uuid)
-
-
-
-
-

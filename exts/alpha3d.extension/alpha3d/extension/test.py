@@ -33,8 +33,10 @@ model_file = os.path.join(os.getcwd(),  str(image_uuid) + ".glb")
 
 decoded_model_content = base64.b64decode(asset_list[0]['assetFiles'][0]['base64'])
 
+print(asset_list)
 with open(model_file, 'wb') as model_file_obj:
     model_file_obj.write(decoded_model_content)
+    print(image_uuid)
 
 # self.base64_to_image(asset_files[0]['base64'], model_file)
-print(asset_list)
+#print(asset_list)

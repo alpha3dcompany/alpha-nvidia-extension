@@ -45,3 +45,7 @@ name = "alpha3d.extension"
 dependencies = [
     "omni.kit.ui_test" # UI testing extension
 ]
+
+[python.pipapi]
+requirements = ["requests", "urllib3"]
+use_online_index = true

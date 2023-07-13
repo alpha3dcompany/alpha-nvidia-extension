@@ -1,4 +1,4 @@
-import requests
+from pip_prebundle import requests
 from .mocked import Mocked
 
 
@@ -6,10 +6,10 @@ SIGNIN_URL = 'https://app.alpha3d.io/alphaar/auth/oauth/token?grant_type=passwor
 
 
 class Login:
-    def __init__(self, username, password, mocked=False):
+    def __init__(self, username, password, mocked=True):
         self.username = username
         self.password = password
-        self.mocked = mocked
+        self.mocked = True
 
     def sign_in(self):
         if self.mocked:
