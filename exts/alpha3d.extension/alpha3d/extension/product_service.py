@@ -1,4 +1,4 @@
-from pip_prebundle import requests
+import requests
 from .mocked import Mocked
 
 

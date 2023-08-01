@@ -1,8 +1,7 @@
 alpha3d.extension
 #############################
 
-Example of Python only extension
-
+ALPHA3D EXTENSION
 
 .. toctree::
    :maxdepth: 1

@@ -4,7 +4,7 @@ from io import BytesIO
 import omni.ext
 import omni.ui as ui
 from PIL import Image
-
+from pathlib import Path
 from .login import Login
 from .product_service import ProductService
 
@@ -22,9 +22,11 @@ class Alpha3dExtensionExtension(omni.ext.IExt):
     # ext_id is current extension id. It can be used with extension manager to query additional information, like where
     # this extension is located on filesystem.
 
-    temp_dir = os.path.join(os.getcwd(), r'temp')
+    temp_dir = Path.home() / 'temp'
+    temp_dir = temp_dir.as_posix()
 
     def __init__(self):
+        super().__init__()
         self.email_input = None
         self.password_input = None
         self.access_token = None
@@ -74,13 +76,12 @@ class Alpha3dExtensionExtension(omni.ext.IExt):
     def login_button_clicked(self):
         username = self.email_input.model.get_value_as_string()
         password = self.password_input.model.get_value_as_string()
-
         login = Login(username, password, mocked=self.mocked)
-
+        
         self.access_token = login.sign_in()
 
         if self.is_logged():
-            product_service = ProductService(self.access_token, "USD", mocked=self.mocked)
+            product_service = ProductService(self.access_token, "GLB", mocked=self.mocked)
             self.assets = product_service.browse_assets()
         self.show_content()
 
@@ -143,11 +144,11 @@ class Alpha3dExtensionExtension(omni.ext.IExt):
                                 model_name = asset["modelName"]
                                 thumbnail = asset["thumbnail"]
                                 asset_files = asset["assetFiles"]
-
+                                
                                 image_uuid = uuid.uuid4()
 
-                                image_file = os.path.join(Alpha3dExtensionExtension.temp_dir, str(image_uuid) + ".png")
-                                model_file = os.path.join(Alpha3dExtensionExtension.temp_dir, str(image_uuid) + ".usd")
+                                image_file = os.path.join(Alpha3dExtensionExtension.temp_dir, str(image_uuid) + ".PNG")
+                                model_file = os.path.join(Alpha3dExtensionExtension.temp_dir, str(image_uuid) + ".glb")
 
                                 self.base64_to_image(thumbnail, image_file)
 
@@ -157,21 +158,21 @@ class Alpha3dExtensionExtension(omni.ext.IExt):
                                     with open(model_file, 'wb') as model_file_obj:
                                         model_file_obj.write(decoded_model_content)
 
-                                def drag(image_file, model_file):
+                                def drag(image_file, url):
                                     with ui.VStack():
                                         ui.Image(image_file, width=100, height=100)
                                         ui.Label(brand_name)
                                         ui.Label(model_name)
-                                    return image_file
+                                    return url
 
-                                def drag_area(url, model_file):
+                                def drag_area(image_file, url):
                                     image = ui.ImageWithProvider(image_file, width=100, height=90,
                                                                  style={"margin_width": 5})
                                     _brand_name = ui.Label(brand_name, alignment=ui.Alignment.CENTER_TOP, height=10,
                                                            style={"font_size": 15})
                                     _model_name = ui.Label(model_name, alignment=ui.Alignment.CENTER_TOP, height=30,
                                                            style={"font_size": 15})
-                                    image.set_drag_fn(lambda: drag(url, model_file))
+                                    image.set_drag_fn(lambda: drag(image_file, url))
 
                                 with ui.VStack():
                                     drag_area(
@@ -205,7 +206,8 @@ class Alpha3dExtensionExtension(omni.ext.IExt):
                                              style={"font_size": 15})
                             image.set_drag_fn(lambda: drag(model_name, brand_name, url, thumbnail))
 
-                        data_base_path = os.path.join(os.getcwd(), "exts", "alpha3d.extension", "data")
+                        path = Path(__file__).parent.parent.parent / "data"
+                        data_base_path = path.as_posix()
 
                         library_assets = ["armchair", "baby_bid", "bottle", "bottle_opener", "chair", "couch",
                                           "glasses", "lamp", "mouse_pad", "mug", "ring", "shot_glass", "sideboard",

@@ -1,4 +1,4 @@
-from pip_prebundle import requests
+import requests
 from .mocked import Mocked
 
 
@@ -24,10 +24,9 @@ class Login:
         try:
             response = requests.request('POST', SIGNIN_URL, headers=headers, data=data)
             if response.status_code == 200:
-                print(response.json())
                 token = response.json().get('access_token')
                 if token:
-                    print("Successfully logged in! Token: " + token)
+                    print("Successfully logged in!")
                 else:
                     print("An error occurred while logging in.")
             elif response.status_code == 401:

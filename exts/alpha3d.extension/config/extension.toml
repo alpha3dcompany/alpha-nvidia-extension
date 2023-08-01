@@ -16,10 +16,10 @@ readme  = "docs/README.md"
 repository = ""
 
 # One of categories for UI.
-category = "Example"
+category = "Generative AI"
 
 # Keywords for the extension
-keywords = ["kit", "example"]
+keywords = ["alpha3d", "generativeai", "3dmodel"]
 
 # Location of change log file in target (final) folder of extension, relative to the root.
 # More info on writing changelog: https://keepachangelog.com/en/1.0.0/
@@ -47,5 +47,5 @@ dependencies = [
 ]
 
 [python.pipapi]
-requirements = ["requests", "urllib3"]
+requirements = ["requests","urllib3==1.26.12","chardet==3.0.4","charset_normalizer==2.1.1"]
 use_online_index = true
