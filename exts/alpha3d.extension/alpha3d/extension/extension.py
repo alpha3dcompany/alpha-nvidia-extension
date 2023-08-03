@@ -97,7 +97,7 @@ class Alpha3dExtensionExtension(omni.ext.IExt):
                 with ui.VStack(spacing=4):
                     label = ui.Label("Log in", alignment=ui.Alignment.CENTER_BOTTOM, height=40, style={"font_size": 40})
                     label_alpha = ui.Label("with your Alpha3D account", alignment=ui.Alignment.CENTER_TOP, height=5)
-                    label_sign_up = ui.Label("If you don't have an account, visit https://rb.gy/admq3 to get started.",
+                    label_sign_up = ui.Label("If you don't have an account, visit app.alpha3d.io/signup to sign up.",
                                              alignment=ui.Alignment.CENTER_TOP, height=50)
                     label_login_error = ui.Label(self._show_login_error_msg, alignment=ui.Alignment.CENTER_TOP,
                                                  height=20,
